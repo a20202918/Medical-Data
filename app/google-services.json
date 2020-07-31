@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "398563567827",
+    "firebase_url": "https://medical-data-57270.firebaseio.com",
+    "project_id": "medical-data-57270",
+    "storage_bucket": "medical-data-57270.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:398563567827:android:5c27187cb398ea98530c26",
+        "android_client_info": {
+          "package_name": "com.example.appindividual"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "398563567827-f48g53nj2efn7lks0fncq10cbjach6up.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.appindividual",
+            "certificate_hash": "442a5aeebabd5e14fe7e563d88ef4fccdd5c3611"
+          }
+        },
+        {
+          "client_id": "398563567827-dj6gvsbcfi3c72h88fbb8eacbg5lp1u9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA44yr06Sl5MsTaTGXQM9uMThQwDtIOh38"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "398563567827-dj6gvsbcfi3c72h88fbb8eacbg5lp1u9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

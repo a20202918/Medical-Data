@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">AppIndividual</string>
+    <string name="tipo">TIPO</string>
+    <string-array name="elementos">
+        <item>Electrónico</item>
+        <item>Eléctrico</item>
+        <item>Electroneumático</item>
+        <item>Mecánico</item>
+        <item>Hidráulico</item>
+        <item>Neumático</item>
+        <item>Infraestructura</item>
+        <item>No aplica</item>
+    </string-array>
+</resources>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.appindividual">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label=""
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".ModificarEquipoActivity" android:parentActivityName="com.example.appindividual.MenuActivityAdmin"></activity>
+        <activity android:name=".AgregarEquipoActivity" android:parentActivityName="com.example.appindividual.MenuActivityAdmin"/>
+        <activity android:name=".MenuActivityAdmin" android:parentActivityName="com.example.appindividual.MainActivity" android:label="Equipos"/>
+        <activity android:name=".ReportarFallosActivity" android:parentActivityName="com.example.appindividual.MenuActivity"/>
+        <activity android:name=".MenuActivity" android:parentActivityName="com.example.appindividual.MainActivity" android:label="Equipos"/>
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
