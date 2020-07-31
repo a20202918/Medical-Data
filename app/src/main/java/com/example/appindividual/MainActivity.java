@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser =  firebaseAuth.getCurrentUser();
 
+        //Verificación si el usuarioya iniió sesión en el celular
         if(currentUser != null){
 
             Log.d("infoApp", "Usuario logueado");
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
             String displayName = currentUser.getDisplayName();
             Log.d("infoApp", "Info:"+email+uid+displayName);
 
+            //Si lo ha echo lo direcciona como administrador
             Intent intent = new Intent(this, MenuActivityAdmin.class);
             int requestCode = 1;
             startActivityForResult(intent,requestCode);
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void iniciarSesionBtn(View view){
 
+        //Método para iniciar sesión por medio de correo o cuenta de Google con ayuda de la autentificación de Firebase
         List<AuthUI.IdpConfig> listaProveedores = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build(),
                 new AuthUI.IdpConfig.GoogleBuilder().build());
@@ -89,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void accedeAquiBtn(View view){
+
+        //Botón para las personas no administradoras
         Intent intent = new Intent(this, MenuActivity.class);
         int requestCode = 1;
         startActivityForResult(intent,requestCode);

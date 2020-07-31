@@ -12,6 +12,8 @@ import androidx.fragment.app.DialogFragment;
 import java.util.Calendar;
 
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+
+    //Clase para ver el frgmento de fechas y elegir
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 

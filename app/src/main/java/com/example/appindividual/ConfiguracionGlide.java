@@ -14,6 +14,8 @@ import java.io.InputStream;
 @GlideModule
 public class ConfiguracionGlide extends AppGlideModule {
 
+    //Clase para poder visualizar las imagenes de los equipos desde Firebse sin tener que descargarlas
+
     @Override
     public void registerComponents(Context context, Glide glide, Registry registry) {
         // Register FirebaseImageLoader to handle StorageReference

@@ -95,11 +95,13 @@ public class AgregarEquipoActivity extends AppCompatActivity {
     }
 
     public void seleccionarFecha(View view){
+        //Mostrar el fragment para elegir una fecha
         DatePickerFragment datePickerFragment =  new DatePickerFragment();
         datePickerFragment.show(getSupportFragmentManager(), "fecha");
     }
 
     public void mostrarFecha(int year, int month, int dayOfMonth){
+        //Mostrar fecha elegida en el edit text
         String fecha = String.valueOf(year)+"/"+ String.valueOf(month)+"/"+String.valueOf(dayOfMonth);
         EditText editTextFechaSeleccionada = findViewById(R.id.editTextFechaSeleccionada);
         editTextFechaSeleccionada.setText(fecha);
@@ -118,9 +120,9 @@ public class AgregarEquipoActivity extends AppCompatActivity {
                     //Proceso de subir la imagen con el nombre propuesto
                     Uri path = data.getData();
                     //imagen.setImageURI(path);
-                    EditText editTextNombre = findViewById(R.id.editTextNombre);
-                    String nombre = String.valueOf(editTextNombre.getText());
-                    StorageReference imagenesRef = storageReference.child(nombre);
+                    EditText editTextId = findViewById(R.id.editTextId);
+                    String id = String.valueOf(editTextId.getText());
+                    StorageReference imagenesRef = storageReference.child(id);
 
                     StorageMetadata metadata = new StorageMetadata.Builder().build();
 
@@ -144,6 +146,8 @@ public class AgregarEquipoActivity extends AppCompatActivity {
         public void btnAgregarEquipo (View view){
 
         //Método donde se agrega a la database toda la información del equipo
+            EditText editTextId = findViewById(R.id.editTextId);
+            String id = String.valueOf(editTextId.getText());
             EditText editTextNombre = findViewById(R.id.editTextNombre);
             String nombre = String.valueOf(editTextNombre.getText());
             EditText editTextMarca = findViewById(R.id.editTextMarca);
@@ -153,10 +157,13 @@ public class AgregarEquipoActivity extends AppCompatActivity {
             EditText editTextFechaSeleccionada = findViewById(R.id.editTextFechaSeleccionada);
             String fechaSeleccionada = String.valueOf(editTextFechaSeleccionada.getText());
 
-
-            if (TextUtils.isEmpty(nombre) || TextUtils.isEmpty(marca) || TextUtils.isEmpty(fechaSeleccionada)) {
+            //Verificación de valores no nulos
+            if (TextUtils.isEmpty(id) || TextUtils.isEmpty(nombre) ||TextUtils.isEmpty(marca) || TextUtils.isEmpty(fechaSeleccionada)) {
+                if(TextUtils.isEmpty(id)){
+                    editTextId.setError("Por favor ingrese un id");
+                }
                 if(TextUtils.isEmpty(nombre)){
-                    editTextNombre.setError("Por favor ingrese un nombre");
+                    editTextId.setError("Por favor ingrese un nombre");
                 }
                 if(TextUtils.isEmpty(marca)){
                     editTextMarca.setError("Por favor ingrese una marca");
@@ -166,13 +173,14 @@ public class AgregarEquipoActivity extends AppCompatActivity {
                 }
             }else{
 
+                //Crear el objeto y mandarlo a database
                 EquipoDto equipoDto = new EquipoDto();
-                equipoDto.setNombre(nombre);
+                equipoDto.setNombre(id);
                 equipoDto.setMarca(marca);
                 equipoDto.setTipo(tipo);
                 equipoDto.setFechaMantenimiento(fechaSeleccionada);
 
-                databaseReference.child("pruebas").child(nombre).setValue(equipoDto).addOnSuccessListener(new OnSuccessListener<Void>() {
+                databaseReference.child("pruebas").child(id).setValue(equipoDto).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
                     Toast.makeText(getApplicationContext(), "Equipo agregado exitosamente", Toast.LENGTH_SHORT).show();
@@ -186,10 +194,11 @@ public class AgregarEquipoActivity extends AppCompatActivity {
 
                 databaseReference = FirebaseDatabase.getInstance().getReference();
 
+                //Se crea el objeto de fallos
                 FallaDto fallaDto = new FallaDto();
                 fallaDto.setFallo(false);
 
-                databaseReference.child(nombre).setValue(fallaDto);
+                databaseReference.child(id).setValue(fallaDto);
 
             }
             finish();
