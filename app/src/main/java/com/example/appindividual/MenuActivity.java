@@ -56,7 +56,7 @@ public class MenuActivity extends AppCompatActivity {
         listEquipos = new ArrayList<EquipoRV>();
 
         //Listener de los equipos
-        databaseReference.child("pruebas").addChildEventListener(new ChildEventListener() {
+        databaseReference.child("pruebas").orderByChild("id").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 if (dataSnapshot.getValue() != null){

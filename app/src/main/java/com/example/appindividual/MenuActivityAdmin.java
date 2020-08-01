@@ -56,7 +56,7 @@ public class MenuActivityAdmin extends AppCompatActivity {
         //Hacer que se muestre en recycler View
         listEquipos = new ArrayList<EquipoRV>();
 
-        databaseReference.child("pruebas").addChildEventListener(new ChildEventListener() {
+        databaseReference.child("pruebas").orderByChild("id").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 if (dataSnapshot.getValue() != null){
