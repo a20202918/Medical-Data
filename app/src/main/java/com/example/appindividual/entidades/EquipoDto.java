@@ -13,13 +13,12 @@ public class EquipoDto {
     public EquipoDto() {
     }
 
-    public EquipoDto(int id, String nombre, String tipo, String marca, String fechaMantenimiento, String estado) {
+    public EquipoDto(int id, String nombre, String tipo, String marca, String fechaMantenimiento) {
         this.id = id;
         this.nombre = nombre;
         this.tipo = tipo;
         this.marca = marca;
         this.fechaMantenimiento = fechaMantenimiento;
-        this.estado = estado;
     }
 
     public int getId() {
@@ -60,14 +59,6 @@ public class EquipoDto {
 
     public void setFechaMantenimiento(String fechaMantenimiento) {
         this.fechaMantenimiento = fechaMantenimiento;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
     }
 
 }

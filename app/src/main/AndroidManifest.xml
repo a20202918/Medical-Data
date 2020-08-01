@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".ModificarEquipoActivity" android:parentActivityName="com.example.appindividual.MenuActivityAdmin"></activity>
         <activity android:name=".AgregarEquipoActivity" android:parentActivityName="com.example.appindividual.MenuActivityAdmin"/>
-        <activity android:name=".MenuActivityAdmin" android:parentActivityName="com.example.appindividual.MainActivity" android:label="Equipos"/>
+        <activity android:name=".MenuActivityAdmin" android:label="Equipos"/>
         <activity android:name=".ReportarFallosActivity" android:parentActivityName="com.example.appindividual.MenuActivity"/>
         <activity android:name=".MenuActivity" android:parentActivityName="com.example.appindividual.MainActivity" android:label="Equipos"/>
         <activity android:name=".MainActivity">
