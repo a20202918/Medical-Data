@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -29,9 +30,9 @@ import com.google.firebase.storage.StorageReference;
 
 public class ModificarEquipoActivity extends AppCompatActivity {
 
-    String nombre;
+    String id;
     DatabaseReference databaseReference;
-    EditText editTextNombre;
+    EditText editTextId;
     Query nombreQuery;
 
     @Override
@@ -43,27 +44,39 @@ public class ModificarEquipoActivity extends AppCompatActivity {
         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
         StorageReference storageReference = firebaseStorage.getReference();
 
+        //Obtener el id del equipo seleccionado en la anterior actividad.
         Intent intent = getIntent();
-        nombre = intent.getData().toString();
-        Log.d("infoApp", nombre);
+        id = intent.getData().toString();
+        Log.d("infoApp", id);
 
-        StorageReference imagenesRef = storageReference.child(nombre);
+        StorageReference imagenesRef = storageReference.child(id);
 
+        //Cargar la imagen del equipo sin descargarla
         ImageView imageViewFoto = findViewById(R.id.imageViewEquipo);
         Glide.with(this).load(imagenesRef).into(imageViewFoto);
 
-        editTextNombre = findViewById(R.id.editTextNombre);
-        editTextNombre.setText(nombre);
+        //Cargar los valores anteriores
+        editTextId = findViewById(R.id.editTextId);
+        editTextId.setText(id);
 
-        databaseReference.child("pruebas").child(nombre).addValueEventListener(new ValueEventListener() {
+        databaseReference.child("pruebas").child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null){
                     EquipoDto equipoDto = dataSnapshot.getValue(EquipoDto.class);
 
-                    EditText editTextColor = findViewById(R.id.editTextMarca);
-                    //String color = equipoDto.getColor();
-                    //editTextColor.setText(color);
+                    //Cargar los valores anteriores
+                    EditText editTextNombre = findViewById(R.id.editTextNombre);
+                    String nombre = equipoDto.getNombre();
+                    editTextNombre.setText(nombre);
+
+                    EditText editTextMarca = findViewById(R.id.editTextMarca);
+                    String marca = equipoDto.getMarca();
+                    editTextMarca.setText(marca);
+
+                    EditText editTextFecha = findViewById(R.id.editTextFechaSeleccionada);
+                    String fecha = equipoDto.getFechaMantenimiento();
+                    editTextFecha.setText(fecha);
                 }
             }
 
@@ -72,33 +85,64 @@ public class ModificarEquipoActivity extends AppCompatActivity {
 
             }
         });
+    }
 
+    public void seleccionarFecha(View view){
+        //Mostrar el fragment para elegir una fecha
+        DatePickerFragment datePickerFragment =  new DatePickerFragment();
+        datePickerFragment.show(getSupportFragmentManager(), "fecha");
+    }
+
+    public void mostrarFecha(int year, int month, int dayOfMonth){
+        //Mostrar fecha elegida en el edit text
+        String fecha = String.valueOf(year)+"/"+ String.valueOf(month)+"/"+String.valueOf(dayOfMonth);
+        EditText editTextFechaSeleccionada = findViewById(R.id.editTextFechaSeleccionada);
+        editTextFechaSeleccionada.setText(fecha);
     }
 
     public void btnModificar(View view) {
 
+        //Método donde se agrega a la database toda la información del equipo
+        EditText editTextId = findViewById(R.id.editTextId);
+        String idString = String.valueOf(editTextId.getText());
+        int id = Integer.valueOf(idString);
         EditText editTextNombre = findViewById(R.id.editTextNombre);
         String nombre = String.valueOf(editTextNombre.getText());
-        EditText editTextColor = findViewById(R.id.editTextMarca);
-        String color = String.valueOf(editTextColor.getText());
+        EditText editTextMarca = findViewById(R.id.editTextMarca);
+        String marca = String.valueOf(editTextMarca.getText());
+        Spinner spinnerTipo = findViewById(R.id.spinner);
+        String tipo = spinnerTipo.getSelectedItem().toString();
+        EditText editTextFechaSeleccionada = findViewById(R.id.editTextFechaSeleccionada);
+        String fechaSeleccionada = String.valueOf(editTextFechaSeleccionada.getText());
 
-        if (TextUtils.isEmpty(nombre) || TextUtils.isEmpty(color)) {
-            if (TextUtils.isEmpty(nombre)) {
-                editTextNombre.setError("Por favor ingrese un nombre");
+        //Verificación de valores no nulos
+        if (TextUtils.isEmpty(idString) || TextUtils.isEmpty(nombre) ||TextUtils.isEmpty(marca) || TextUtils.isEmpty(fechaSeleccionada)) {
+            if(TextUtils.isEmpty(idString)){
+                editTextId.setError("Por favor ingrese un id");
             }
-            if (TextUtils.isEmpty(color)) {
-                editTextColor.setError("Por favor ingrese un color");
+            if(TextUtils.isEmpty(nombre)){
+                editTextId.setError("Por favor ingrese un nombre");
+            }
+            if(TextUtils.isEmpty(marca)){
+                editTextMarca.setError("Por favor ingrese una marca");
+            }
+            if(TextUtils.isEmpty(fechaSeleccionada)){
+                editTextFechaSeleccionada.setError("Por favor ingrese una fecha");
             }
         } else {
 
+            //Crear el objeto y mandarlo a database
             EquipoDto equipoDto = new EquipoDto();
+            equipoDto.setId(id);
             equipoDto.setNombre(nombre);
-            //equipoDto.setColor(color);
+            equipoDto.setMarca(marca);
+            equipoDto.setTipo(tipo);
+            equipoDto.setFechaMantenimiento(fechaSeleccionada);
 
-            databaseReference.child("pruebas").child(nombre).setValue(equipoDto).addOnSuccessListener(new OnSuccessListener<Void>() {
+            databaseReference.child("pruebas").child(idString).setValue(equipoDto).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    Toast.makeText(getApplicationContext(), "Equipo modificado exitosamente", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Equipo agregado exitosamente", Toast.LENGTH_SHORT).show();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -113,7 +157,7 @@ public class ModificarEquipoActivity extends AppCompatActivity {
 
     public void btnEliminarEquipo(View view) {
         FirebaseDatabase ref = FirebaseDatabase.getInstance();
-        ref.getReference().child("pruebas").child(nombre).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+        ref.getReference().child("pruebas").child(id).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 Toast.makeText(getApplicationContext(), "Equipo eliminado exitosamente", Toast.LENGTH_SHORT);

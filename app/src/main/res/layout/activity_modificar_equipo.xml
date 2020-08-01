@@ -10,7 +10,7 @@
         android:id="@+id/editTextNombre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="292dp"
+        android:layout_marginTop="304dp"
         android:layout_marginEnd="19dp"
         android:ems="10"
         android:inputType="textPersonName"
@@ -22,7 +22,7 @@
         android:id="@+id/editTextMarca"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="2dp"
         android:ems="10"
         android:inputType="textPersonName"
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
         android:layout_marginBottom="16dp"
-        android:text="Color"
+        android:text="Marca"
         app:layout_constraintBottom_toBottomOf="@+id/editTextMarca"
         app:layout_constraintEnd_toStartOf="@+id/editTextMarca"
         app:layout_constraintStart_toStartOf="parent" />
@@ -55,25 +55,27 @@
         android:id="@+id/buttonAgregarEquipo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="108dp"
         android:onClick="btnModificar"
         android:text="Modificar equipo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.184"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.698" />
+        app:layout_constraintVertical_bias="0.913" />
 
     <Button
         android:id="@+id/button3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginEnd="52dp"
         android:onClick="btnEliminarEquipo"
         android:text="Eliminar equipo"
         android:textColor="#FFFFFF"
-        app:layout_constraintStart_toStartOf="@+id/buttonAgregarEquipo"
-        app:layout_constraintTop_toBottomOf="@+id/buttonAgregarEquipo" />
+        app:layout_constraintBottom_toBottomOf="@+id/buttonAgregarEquipo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/buttonAgregarEquipo"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/imageViewEquipo"
@@ -86,6 +88,95 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.292"
         app:srcCompat="@drawable/ic_launcher_foreground" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="31dp"
+        android:layout_height="30dp"
+        android:text="ID"
+        app:layout_constraintBottom_toBottomOf="@+id/editTextId"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.155"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/editTextId"
+        app:layout_constraintVertical_bias="0.714" />
+
+    <EditText
+        android:id="@+id/editTextId"
+        android:layout_width="198dp"
+        android:layout_height="44dp"
+        android:ems="10"
+        android:inputType="number"
+        app:layout_constraintBottom_toTopOf="@+id/editTextNombre"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.525"
+        app:layout_constraintStart_toEndOf="@+id/textView13"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.934" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tipo"
+        app:layout_constraintBottom_toTopOf="@+id/textView10"
+        app:layout_constraintEnd_toStartOf="@+id/spinner"
+        app:layout_constraintHorizontal_bias="0.512"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView8"
+        app:layout_constraintVertical_bias="0.461" />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="209dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="16dp"
+        android:entries="@array/elementos"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toEndOf="@+id/editTextMarca"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/editTextMarca"
+        app:layout_constraintTop_toBottomOf="@+id/editTextMarca" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="504dp"
+        android:layout_marginBottom="84dp"
+        android:text="Último \n mantenimiento"
+        app:layout_constraintBottom_toTopOf="@+id/textView9"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextFechaSeleccionada"
+        android:layout_width="129dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="72dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/buttonSubirFotoEquipo"
+        app:layout_constraintStart_toEndOf="@+id/textView10"
+        app:layout_constraintTop_toTopOf="@+id/spinner"
+        app:layout_constraintVertical_bias="0.532" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="39dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="75dp"
+        android:background="#DFDFDF"
+        android:drawableBottom="@android:drawable/ic_menu_today"
+        android:onClick="seleccionarFecha"
+        app:layout_constraintBottom_toTopOf="@+id/buttonSubirFotoEquipo"
+        app:layout_constraintStart_toEndOf="@+id/editTextFechaSeleccionada"
+        app:layout_constraintTop_toTopOf="@+id/spinner"
+        app:layout_constraintVertical_bias="0.013" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,11 +12,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.appindividual.entidades.EquipoDto;
 import com.example.appindividual.entidades.FallaDto;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 
 import org.w3c.dom.Text;
@@ -25,6 +29,7 @@ import javax.mail.MessagingException;
 
 public class ReportarFallosActivity extends AppCompatActivity {
 
+    String id;
     String nombre;
     DatabaseReference databaseReference;
 
@@ -34,9 +39,24 @@ public class ReportarFallosActivity extends AppCompatActivity {
         setContentView(R.layout.activity_reportar_fallos);
 
         Intent intent = getIntent();
-        nombre = intent.getStringExtra("nombre");
+        id = intent.getStringExtra("id");
 
-        Log.d("infoApp", nombre);
+        Log.d("infoApp", id);
+
+        databaseReference.child("pruebas").child(id).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null){
+                    EquipoDto equipoDto = dataSnapshot.getValue(EquipoDto.class);
+                    nombre = equipoDto.getNombre();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         TextView textViewEquipo = findViewById(R.id.textViewEquipo);
         textViewEquipo.setText("Equipo seleccionado: "+nombre);
@@ -47,25 +67,28 @@ public class ReportarFallosActivity extends AppCompatActivity {
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
+        //Escribir y guardar comentario sobre la falla
         EditText editTextComentarioFallo = findViewById(R.id.editTextComentarioFallo);
         String comentario = editTextComentarioFallo.getText().toString();
 
+        //Enviar correo al administrador cuando hay falla
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("message/rfc822");
         i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"a20202918@pucp.edu.pe"});
         i.putExtra(Intent.EXTRA_SUBJECT, "Reporte de fallas MEDICAL-CARE");
-        i.putExtra(Intent.EXTRA_TEXT   , "Fallas en el equipo: "+nombre+"\nComentario: "+comentario);
+        i.putExtra(Intent.EXTRA_TEXT   , "Fallas en el equipo: "+nombre+ "identificado con el id: "+id+"\nComentario: "+comentario);
         try {
             startActivity(Intent.createChooser(i, "Send mail..."));
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(ReportarFallosActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
         }
 
+        //Cambiar el estado de la falla
         FallaDto fallaDto = new FallaDto();
         fallaDto.setFallo(true);
         fallaDto.setComentario(comentario);
 
-        databaseReference.child(nombre).setValue(fallaDto).addOnSuccessListener(new OnSuccessListener<Void>() {
+        databaseReference.child(id).setValue(fallaDto).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
 

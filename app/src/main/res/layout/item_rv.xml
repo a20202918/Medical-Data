@@ -8,17 +8,29 @@
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="411dp"
-        android:layout_height="131dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-        tools:layout_editor_absoluteY="1dp">
+        tools:layout_editor_absoluteY="1dp"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/textViewId"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:padding="10dp"
+            android:text="id"
+            android:textColor="#FB5C3C"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/textViewNombre"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:padding="20dp"
+            android:padding="10dp"
             android:text="Nombre equipo"
+            android:textColor="#6A6A6A"
             android:textSize="18sp" />
     </LinearLayout>
 

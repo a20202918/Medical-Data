@@ -147,7 +147,8 @@ public class AgregarEquipoActivity extends AppCompatActivity {
 
         //Método donde se agrega a la database toda la información del equipo
             EditText editTextId = findViewById(R.id.editTextId);
-            String id = String.valueOf(editTextId.getText());
+            String idString = String.valueOf(editTextId.getText());
+            int id = Integer.valueOf(idString);
             EditText editTextNombre = findViewById(R.id.editTextNombre);
             String nombre = String.valueOf(editTextNombre.getText());
             EditText editTextMarca = findViewById(R.id.editTextMarca);
@@ -158,8 +159,8 @@ public class AgregarEquipoActivity extends AppCompatActivity {
             String fechaSeleccionada = String.valueOf(editTextFechaSeleccionada.getText());
 
             //Verificación de valores no nulos
-            if (TextUtils.isEmpty(id) || TextUtils.isEmpty(nombre) ||TextUtils.isEmpty(marca) || TextUtils.isEmpty(fechaSeleccionada)) {
-                if(TextUtils.isEmpty(id)){
+            if (TextUtils.isEmpty(idString) || TextUtils.isEmpty(nombre) ||TextUtils.isEmpty(marca) || TextUtils.isEmpty(fechaSeleccionada)) {
+                if(TextUtils.isEmpty(idString)){
                     editTextId.setError("Por favor ingrese un id");
                 }
                 if(TextUtils.isEmpty(nombre)){
@@ -175,12 +176,13 @@ public class AgregarEquipoActivity extends AppCompatActivity {
 
                 //Crear el objeto y mandarlo a database
                 EquipoDto equipoDto = new EquipoDto();
-                equipoDto.setNombre(id);
+                equipoDto.setId(id);
+                equipoDto.setNombre(nombre);
                 equipoDto.setMarca(marca);
                 equipoDto.setTipo(tipo);
                 equipoDto.setFechaMantenimiento(fechaSeleccionada);
 
-                databaseReference.child("pruebas").child(id).setValue(equipoDto).addOnSuccessListener(new OnSuccessListener<Void>() {
+                databaseReference.child("pruebas").child(idString).setValue(equipoDto).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
                     Toast.makeText(getApplicationContext(), "Equipo agregado exitosamente", Toast.LENGTH_SHORT).show();
@@ -198,7 +200,7 @@ public class AgregarEquipoActivity extends AppCompatActivity {
                 FallaDto fallaDto = new FallaDto();
                 fallaDto.setFallo(false);
 
-                databaseReference.child(id).setValue(fallaDto);
+                databaseReference.child(idString).setValue(fallaDto);
 
             }
             finish();

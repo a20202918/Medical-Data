@@ -36,10 +36,11 @@ import java.util.ArrayList;
 
 public class MenuActivity extends AppCompatActivity {
 
+    //Variables globales
     DatabaseReference databaseReference;
     RecyclerView recycler;
     ArrayList<EquipoRV> listEquipos;
-    String nombre;
+    int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,18 +55,21 @@ public class MenuActivity extends AppCompatActivity {
         //Hacer que se muestre en recycler View
         listEquipos = new ArrayList<EquipoRV>();
 
+        //Listener de los equipos
         databaseReference.child("pruebas").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 if (dataSnapshot.getValue() != null){
 
+                    //Obtener el nombre de cada equipo
                     EquipoDto equipoDto = dataSnapshot.getValue(EquipoDto.class);
-                    Log.d("infoApp", equipoDto.getNombre());
+                    Log.d("infoApyp", equipoDto.getNombre());
 
                     recycler = findViewById(R.id.recyclerView);
                     recycler.setLayoutManager(new LinearLayoutManager(MenuActivity.this));
 
-                    listEquipos.add(new EquipoRV(equipoDto.getNombre()));
+                    //Agregar los nombres a la lista
+                    listEquipos.add(new EquipoRV(equipoDto.getId(),equipoDto.getNombre()));
 
                     AdapterDatos adapter = new AdapterDatos(listEquipos);
 
@@ -73,28 +77,32 @@ public class MenuActivity extends AppCompatActivity {
                     adapter.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            //Toast.makeText(getApplicationContext(),"Seleccion: "+listEquipos.get
-                            //        (recycler.getChildAdapterPosition(v)).getNombre(),Toast.LENGTH_SHORT).show();
-                            nombre = listEquipos.get(recycler.getChildAdapterPosition(v)).getNombre();
 
+                            //Se lee el ID de cada equipo
+                            id = listEquipos.get(recycler.getChildAdapterPosition(v)).getId();
+
+                            //Se realiza una petición, se eligió hacerla con Voller en lugar de addValueEventListener para que se
+                            // busque si la falla esta reportada o no una sola vez.
                             RequestQueue queue = Volley.newRequestQueue(MenuActivity.this);
-                            String url = "https://medical-data-57270.firebaseio.com/"+nombre+".json";
+                            String url = "https://medical-data-57270.firebaseio.com/"+ String.valueOf(id) +".json";
 
                             StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                                     new Response.Listener<String>() {
                                         @Override
                                         public void onResponse(String response) {
+                                            //Se pasa del archivo JSON al objeto falla
                                             Gson gson = new Gson();
                                             FallaDto falla = gson.fromJson(response,FallaDto.class);
                                             final String eleccion = String.valueOf(falla.isFallo());
                                             Log.d("infoApp", eleccion);
 
+                                            //Dependiendo si hay o no un fallo reportado se muestra:
                                             switch (eleccion){
 
                                                 case "true":
                                                     Log.d("infoApp", "hay fallo reportado");
 
-                                                    //conformidad
+                                                    //Un alert para dar conformidad al servicio
                                                     AlertDialog.Builder builder = new AlertDialog.Builder(MenuActivity.this);
                                                     builder.setMessage("¿El equipo ahora está funcionando correctamente?");
                                                     builder.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
@@ -102,7 +110,7 @@ public class MenuActivity extends AppCompatActivity {
                                                         @Override
                                                         public void onClick(DialogInterface dialog, int which) {
                                                             //poner el fallo en false
-                                                            modificarFallo(nombre);
+                                                            modificarFallo(id);
                                                         }
                                                     });
                                                     builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -117,10 +125,10 @@ public class MenuActivity extends AppCompatActivity {
 
                                                 case "false":
 
-                                                    //reportar fallo
+                                                    //O se redirecciona a la página para reportar fallas.
                                                     Log.d("infoApp", "sin fallo");
                                                     Intent intent = new Intent(MenuActivity.this, ReportarFallosActivity.class);
-                                                    intent.putExtra("nombre", nombre);
+                                                    intent.putExtra("id", String.valueOf(id));
                                                     int requestCode = 1;
                                                     startActivityForResult(intent, requestCode);
                                                     break;
@@ -136,11 +144,6 @@ public class MenuActivity extends AppCompatActivity {
                                     });
                             queue.add(stringRequest);
 
-                            /*if(eleccion){
-
-                            }*/
-
-
                         }
                     });
                     recycler.setAdapter(adapter);
@@ -149,10 +152,7 @@ public class MenuActivity extends AppCompatActivity {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                if (dataSnapshot.getValue() != null){
-                    EquipoDto equipoDto = dataSnapshot.getValue(EquipoDto.class);
-                    Log.d("infoApp", equipoDto.getNombre());
-                }
+
             }
 
             @Override
@@ -173,14 +173,15 @@ public class MenuActivity extends AppCompatActivity {
 
     }
 
-    public void modificarFallo(String nombre){
+    public void modificarFallo(int id){
 
+        //Método para eliminar el fallo cuando se etá conforme con el servicio
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
         FallaDto fallaDto = new FallaDto();
         fallaDto.setFallo(false);
 
-        databaseReference.child(nombre).setValue(fallaDto).addOnSuccessListener(new OnSuccessListener<Void>() {
+        databaseReference.child(String.valueOf(id)).setValue(fallaDto).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
 

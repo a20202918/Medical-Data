@@ -41,7 +41,7 @@ public class MenuActivityAdmin extends AppCompatActivity {
     DatabaseReference databaseReference;
     RecyclerView recycler;
     ArrayList<EquipoRV> listEquipos;
-    String nombre;
+    String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,12 +62,14 @@ public class MenuActivityAdmin extends AppCompatActivity {
                 if (dataSnapshot.getValue() != null){
 
                     EquipoDto equipoDto = dataSnapshot.getValue(EquipoDto.class);
-                    Log.d("infoApp", equipoDto.getNombre());
+                    Log.d("infoApyp", equipoDto.getNombre());
 
                     recycler = findViewById(R.id.recyclerView);
                     recycler.setLayoutManager(new LinearLayoutManager(MenuActivityAdmin.this));
 
-                    listEquipos.add(new EquipoRV(equipoDto.getNombre()));
+                    //Se agrega un nuevo equipo a la lista
+                    EquipoRV equipoRV = new EquipoRV(equipoDto.getId(),equipoDto.getNombre());
+                    listEquipos.add(equipoRV);
 
                     AdapterDatos adapter = new AdapterDatos(listEquipos);
 
@@ -78,16 +80,16 @@ public class MenuActivityAdmin extends AppCompatActivity {
                             //Toast.makeText(getApplicationContext(),"Seleccion: "+listEquipos.get
                             //        (recycler.getChildAdapterPosition(v)).getNombre(),Toast.LENGTH_SHORT).show();
 
-                            nombre = listEquipos.get(recycler.getChildAdapterPosition(v)).getNombre();
+                            id = String.valueOf(listEquipos.get(recycler.getChildAdapterPosition(v)).getId());
 
+                            //Si se le da Click, pasa a modificar el equipo seleccionado
                             Intent intent2 = new Intent(MenuActivityAdmin.this, ModificarEquipoActivity.class);
-                            intent2.setData(Uri.parse(nombre));
+                            intent2.setData(Uri.parse(id));
                             int requestCode = 2;
                             startActivityForResult(intent2,requestCode);
 
                         }
                     });
-
                     recycler.setAdapter(adapter);
                 }
             }
@@ -115,49 +117,15 @@ public class MenuActivityAdmin extends AppCompatActivity {
 
     }
 
-    private void modificarDatos(String nombre) {
-
-        EditText editTextNombre = findViewById(R.id.editTextNombre);
-        editTextNombre.setText(nombre);
-        String nombreModificado = String.valueOf(editTextNombre.getText());
-        EditText editTextColor = findViewById(R.id.editTextMarca);
-        String color = String.valueOf(editTextColor.getText());
-
-        if (TextUtils.isEmpty(nombre) || TextUtils.isEmpty(color)) {
-            if (TextUtils.isEmpty(nombre)) {
-                editTextNombre.setError("Por favor ingrese un nombre");
-            }
-            if (TextUtils.isEmpty(color)) {
-                editTextColor.setError("Por favor ingrese un color");
-            }
-        } else {
-
-            EquipoDto equipoDto = new EquipoDto();
-            equipoDto.setNombre(nombre);
-            //equipoDto.setColor(color);
-
-            databaseReference.child("pruebas").child(nombre).setValue(equipoDto).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    Toast.makeText(getApplicationContext(), "Equipo agregado exitosamente", Toast.LENGTH_SHORT).show();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getApplicationContext(), "Error al guardar", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
-
     public void btnAgregar(MenuItem item){
+        //Botón para agregar un equipo (en el menú superior)
         Intent intent = new Intent(this, AgregarEquipoActivity.class);
         int requestCode = 1;
         startActivityForResult(intent,requestCode);
     }
 
     public void btnCerrarSesion(MenuItem item){
-
+        //Botón para cerrar la sesión iniciada
         AuthUI.getInstance().signOut(MenuActivityAdmin.this);
         finish();
 
