@@ -43,12 +43,16 @@ public class ReportarFallosActivity extends AppCompatActivity {
 
         Log.d("infoApp", id);
 
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+
         databaseReference.child("pruebas").child(id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null){
                     EquipoDto equipoDto = dataSnapshot.getValue(EquipoDto.class);
                     nombre = equipoDto.getNombre();
+                    TextView textViewEquipo = findViewById(R.id.textViewEquipo);
+                    textViewEquipo.setText("Equipo seleccionado: "+nombre);
                 }
             }
 
@@ -57,10 +61,6 @@ public class ReportarFallosActivity extends AppCompatActivity {
 
             }
         });
-
-        TextView textViewEquipo = findViewById(R.id.textViewEquipo);
-        textViewEquipo.setText("Equipo seleccionado: "+nombre);
-
     }
 
     public void enviarFallo(View view) throws MessagingException {
@@ -76,7 +76,7 @@ public class ReportarFallosActivity extends AppCompatActivity {
         i.setType("message/rfc822");
         i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"a20202918@pucp.edu.pe"});
         i.putExtra(Intent.EXTRA_SUBJECT, "Reporte de fallas MEDICAL-CARE");
-        i.putExtra(Intent.EXTRA_TEXT   , "Fallas en el equipo: "+nombre+ "identificado con el id: "+id+"\nComentario: "+comentario);
+        i.putExtra(Intent.EXTRA_TEXT   , "Fallas en el equipo: "+id+"\nComentario: "+comentario);
         try {
             startActivity(Intent.createChooser(i, "Send mail..."));
         } catch (android.content.ActivityNotFoundException ex) {
@@ -92,7 +92,7 @@ public class ReportarFallosActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Void aVoid) {
 
-                Toast toast = Toast.makeText(getApplicationContext(),"Enviado exitosamente",Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getApplicationContext(),"Redireccionando...",Toast.LENGTH_SHORT);
                 toast.show();
             }
         }).addOnFailureListener(new OnFailureListener() {

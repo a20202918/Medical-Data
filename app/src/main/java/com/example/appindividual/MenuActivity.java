@@ -185,7 +185,7 @@ public class MenuActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Void aVoid) {
 
-                Toast toast = Toast.makeText(getApplicationContext(),"Enviado exitosamente",Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getApplicationContext(),"Estado modificado satisfactoriamente",Toast.LENGTH_SHORT);
                 toast.show();
             }
         }).addOnFailureListener(new OnFailureListener() {
